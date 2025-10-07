@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: eplatform-b2b-base
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+
+commonLabels:
+  app: eplatform-b2b
+
+# Default namespace for all resources
+namespace: eplatform-b2b

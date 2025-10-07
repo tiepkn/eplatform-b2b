@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: eplatform-b2b-development
+
+bases:
+  - ../base
+
+patchesStrategicMerge:
+  - deployment-patch.yaml
+
+configMapGenerator:
+  - name: eplatform-config
+    behavior: replace
+    literals:
+      - SPRING_PROFILES_ACTIVE=dev
+      - DB_HOST=localhost
+      - KAFKA_BROKERS=localhost:9092
+
+# Development-specific labels
+commonLabels:
+  environment: development

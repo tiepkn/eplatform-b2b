@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package com.eplatform.b2b.payment.proto;
+
+option java_multiple_files = true;
+option java_package = "com.eplatform.b2b.payment.proto";
+option java_outer_classname = "PaymentProto";
+
+message PingRequest {
+  string echo = 1;
+}
+
+message PingResponse {
+  string message = 1;
+}
+
+service PaymentService {
+  rpc Ping (PingRequest) returns (PingResponse);
+}

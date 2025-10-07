@@ -1,0 +1,181 @@
+version: '3.8'
+
+# Development environment with hot reload and debug support
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: eplatform-postgres-dev
+    environment:
+      POSTGRES_DB: demo_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: eplatform-kafka-dev
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: eplatform-zookeeper-dev
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  discovery-server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: eplatform-discovery-dev
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    volumes:
+      - ./discovery-server/src:/app/src
+    depends_on:
+      - postgres
+      - kafka
+
+  config-server:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: eplatform-config-dev
+    ports:
+      - "8888:8888"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    volumes:
+      - ./config-server/src:/app/src
+    depends_on:
+      - discovery-server
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: eplatform-gateway-dev
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    volumes:
+      - ./api-gateway/src:/app/src
+    depends_on:
+      - config-server
+
+  inventory-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: eplatform-inventory-dev
+    ports:
+      - "8110:8110"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/demo_db?currentSchema=inventory
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: dev_password
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      JAVA_OPTS: "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=*:5005"
+    volumes:
+      - ./inventory-service/src:/app/src
+      - ./common/src:/app/common-src
+    depends_on:
+      - postgres
+      - kafka
+      - config-server
+
+  order-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: eplatform-order-dev
+    ports:
+      - "8120:8120"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/demo_db?currentSchema=orders
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: dev_password
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+    volumes:
+      - ./order-service/src:/app/src
+      - ./common/src:/app/common-src
+    depends_on:
+      - postgres
+      - kafka
+      - config-server
+
+  catalog-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: eplatform-catalog-dev
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    volumes:
+      - ./catalog-service/src:/app/src
+    depends_on:
+      - config-server
+
+  payment-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: eplatform-payment-dev
+    ports:
+      - "8130:8130"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    volumes:
+      - ./payment-service/src:/app/src
+    depends_on:
+      - kafka
+      - config-server
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: eplatform-auth-dev
+    ports:
+      - "8100:8100"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    volumes:
+      - ./auth-service/src:/app/src
+    depends_on:
+      - config-server
+
+volumes:
+  postgres_dev_data:
+
+networks:
+  default:
+    name: eplatform-dev-network

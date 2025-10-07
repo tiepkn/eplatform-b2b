@@ -1,0 +1,26 @@
+# Maven
+/target/
+**/target/
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/
+
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+
+# Java
+*.class
+
+# Docker
+**/build/
+
+# Spring
+application-local.yml
+**/application-local.yml
