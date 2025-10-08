@@ -39,6 +39,8 @@ kill -9 <PID>
 
 # Alternative: Use different port
 mvn spring-boot:run -pl inventory-service -Dserver.port=8111
+mvn spring-boot:run -pl product-service -Dserver.port=8141
+mvn spring-boot:run -pl supplier-service -Dserver.port=8151
 ```
 
 #### Database Connection Issues

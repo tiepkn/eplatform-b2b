@@ -32,6 +32,8 @@ This monorepo contains a B2B e-commerce microservices system built with Java 21,
 - **inventory-service**: Inventory management (port 8110)
 - **order-service**: Orders and carts (port 8120)
 - **payment-service**: Payment integration stub (port 8130)
+- **product-service**: Detailed product information and management (port 8140)
+- **supplier-service**: Supplier relationship and procurement management (port 8150)
 
 ## 🛠️ Technology Stack
 

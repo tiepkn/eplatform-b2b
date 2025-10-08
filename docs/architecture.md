@@ -14,6 +14,8 @@ This project implements a complete B2B e-commerce solution with the following mi
 - **Inventory Service** - Stock and reservation management
 - **Order Service** - Order processing and management
 - **Payment Service** - Payment processing
+- **Product Service** - Detailed product information and management
+- **Supplier Service** - Supplier relationship and procurement management
 
 ## 🏗️ Architecture
 
@@ -31,10 +33,14 @@ This project implements a complete B2B e-commerce solution with the following mi
 │   Auth Service  │    │ Catalog Service │    │Inventory Service│
 │   (Port 8100)   │    │  (Port 8090)    │    │  (Port 8110)    │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-┌────────▼────────┐    ┌────────▼────────┐
-│  Order Service  │    │Payment Service  │
-│   (Port 8120)   │    │  (Port 8130)    │
-└─────────────────┘    └─────────────────┘
+┌────────▼────────┐    ┌────────▼────────┐    ┌────────▼────────┐
+│  Order Service  │    │Payment Service  │    │ Product Service │
+│   (Port 8120)   │    │  (Port 8130)    │    │  (Port 8140)    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                               ┌────────▼────────┐
+                                               │Supplier Service │
+                                               │  (Port 8150)    │
+                                               └─────────────────┘
 ```
 
 ## 🛠️ Technology Stack
@@ -81,6 +87,8 @@ mvn spring-boot:run -pl inventory-service
 mvn spring-boot:run -pl catalog-service
 mvn spring-boot:run -pl order-service
 mvn spring-boot:run -pl payment-service
+mvn spring-boot:run -pl product-service
+mvn spring-boot:run -pl supplier-service
 mvn spring-boot:run -pl api-gateway
 ```
 
@@ -127,6 +135,8 @@ Each service can be configured via:
 │   ├── 📁 order/ (Order processing)
 │   ├── 📁 catalog/ (Product catalog)
 │   ├── 📁 payment/ (Payment processing)
+│   ├── 📁 product/ (Product information)
+│   ├── 📁 supplier/ (Supplier management)
 │   └── 📁 auth/ (Authentication)
 └── 📁 infrastructure/
     ├── 📁 discovery-server/ (Eureka)

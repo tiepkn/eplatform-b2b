@@ -72,7 +72,13 @@ mvn spring-boot:run -pl order-service
 # Terminal 6: Payment Service
 mvn spring-boot:run -pl payment-service
 
-# Terminal 7: API Gateway
+# Terminal 7: Product Service
+mvn spring-boot:run -pl product-service
+
+# Terminal 8: Supplier Service
+mvn spring-boot:run -pl supplier-service
+
+# Terminal 9: API Gateway
 mvn spring-boot:run -pl api-gateway
 ```
 
@@ -92,6 +98,12 @@ curl http://localhost:8110/actuator/health
 
 # Order Service
 curl http://localhost:8120/actuator/health
+
+# Product Service
+curl http://localhost:8140/actuator/health
+
+# Supplier Service
+curl http://localhost:8150/actuator/health
 ```
 
 ## 🔧 Configuration
