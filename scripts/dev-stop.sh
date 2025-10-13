@@ -57,6 +57,8 @@ done
 services=(
     "api-gateway"
     "auth-service"
+    "supplier-service"
+    "product-service"
     "payment-service"
     "order-service"
     "catalog-service"

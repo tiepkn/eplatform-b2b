@@ -110,12 +110,18 @@ if [ -n "$1" ]; then
         "auth")
             start_service "services/auth-service" "8100"
             ;;
+        "product")
+            start_service "services/product-service" "8140"
+            ;;
+        "supplier")
+            start_service "services/supplier-service" "8150"
+            ;;
         "gateway")
             start_service "infrastructure/api-gateway" "8080"
             ;;
         *)
             echo -e "${RED}❌ Unknown service: $1${NC}"
-            echo -e "${YELLOW}Available services: inventory, order, catalog, payment, auth, gateway${NC}"
+            echo -e "${YELLOW}Available services: inventory, order, catalog, payment, auth, product, supplier, gateway${NC}"
             exit 1
             ;;
     esac
@@ -136,6 +142,12 @@ else
     start_service "services/auth-service" "8100" || exit 1
     sleep 2
 
+    start_service "services/product-service" "8140" || exit 1
+    sleep 2
+
+    start_service "services/supplier-service" "8150" || exit 1
+    sleep 2
+
     start_service "infrastructure/api-gateway" "8080" || exit 1
 fi
 
@@ -148,6 +160,8 @@ echo -e "   • Order Service: http://localhost:8120/actuator/health"
 echo -e "   • Catalog Service: http://localhost:8090/actuator/health"
 echo -e "   • Payment Service: http://localhost:8130/actuator/health"
 echo -e "   • Auth Service: http://localhost:8100/actuator/health"
+echo -e "   • Product Service: http://localhost:8140/actuator/health"
+echo -e "   • Supplier Service: http://localhost:8150/actuator/health"
 
 echo -e "\n${YELLOW}📋 Check logs:${NC}"
 echo -e "   tail -f logs/discovery-server.log"

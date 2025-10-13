@@ -33,7 +33,11 @@ mvn clean package -DskipTests
 # Build Docker images
 docker build -f docker/Dockerfile -t eplatform/inventory-service:latest ./inventory-service
 docker build -f docker/Dockerfile -t eplatform/order-service:latest ./order-service
-# ... build other services
+docker build -f docker/Dockerfile -t eplatform/catalog-service:latest ./catalog-service
+docker build -f docker/Dockerfile -t eplatform/payment-service:latest ./payment-service
+docker build -f docker/Dockerfile -t eplatform/product-service:latest ./product-service
+docker build -f docker/Dockerfile -t eplatform/supplier-service:latest ./supplier-service
+docker build -f docker/Dockerfile -t eplatform/auth-service:latest ./auth-service
 ```
 
 ### Using Docker Compose

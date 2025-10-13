@@ -36,18 +36,26 @@ mvn test -Pcoverage
 ```bash
 # Test specific service
 ./scripts/test.sh inventory-service
+./scripts/test.sh product-service
+./scripts/test.sh supplier-service
 
 # With integration tests
 ./scripts/test.sh inventory-service --integration
+./scripts/test.sh product-service --integration
+./scripts/test.sh supplier-service --integration
 ```
 
 ### Manual Test Commands
 ```bash
 # Unit tests only
 mvn test -pl services/inventory-service -Dtest="**/*Test"
+mvn test -pl services/product-service -Dtest="**/*Test"
+mvn test -pl services/supplier-service -Dtest="**/*Test"
 
 # Integration tests only
 mvn test -pl services/inventory-service -Dtest="**/*IntegrationTest"
+mvn test -pl services/product-service -Dtest="**/*IntegrationTest"
+mvn test -pl services/supplier-service -Dtest="**/*IntegrationTest"
 
 # Verify tests (compile + run)
 mvn verify -pl services/inventory-service
