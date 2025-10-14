@@ -10,9 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name = "products", indexes = {
-    @Index(name = "ux_products_sku", columnList = "sku", unique = true),
-    @Index(name = "idx_products_category", columnList = "category"),
-    @Index(name = "idx_products_supplier", columnList = "supplier_id")
+    @Index(name = "ux_products_sku", columnList = "sku", unique = true)
 })
 public class Product {
   // Getters and Setters

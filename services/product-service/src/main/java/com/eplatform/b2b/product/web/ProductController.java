@@ -1,7 +1,6 @@
 package com.eplatform.b2b.product.web;
 
 import com.eplatform.b2b.product.domain.Product;
-import com.eplatform.b2b.product.domain.SupplierProduct;
 import com.eplatform.b2b.product.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -108,26 +107,26 @@ public class ProductController {
     }
 
     // Supplier-related endpoints
-    @PostMapping("/with-supplier")
-    public ResponseEntity<Product> createProductWithSupplier(@Valid @RequestBody CreateProductWithSupplierRequest request) {
-        Product product = productService.createProductWithSupplier(
-                request.sku(),
-                request.name(),
-                request.description(),
-                request.price(),
-                request.category(),
-                request.supplierId(),
-                request.supplierSku(),
-                request.supplierPrice()
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(product);
-    }
+    // @PostMapping("/with-supplier")
+    // public ResponseEntity<Product> createProductWithSupplier(@Valid @RequestBody CreateProductWithSupplierRequest request) {
+    //     Product product = productService.createProductWithSupplier(
+    //             request.sku(),
+    //             request.name(),
+    //             request.description(),
+    //             request.price(),
+    //             request.category(),
+    //             request.supplierId(),
+    //             request.supplierSku(),
+    //             request.supplierPrice()
+    //     );
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(product);
+    // }
 
-    @GetMapping("/supplier/{supplierId}")
-    public ResponseEntity<List<Product>> getProductsBySupplier(@PathVariable Long supplierId) {
-        List<Product> products = productService.getProductsBySupplier(supplierId);
-        return ResponseEntity.ok(products);
-    }
+    // @GetMapping("/supplier/{supplierId}")
+    // public ResponseEntity<List<Product>> getProductsBySupplier(@PathVariable Long supplierId) {
+    //     List<Product> products = productService.getProductsBySupplier(supplierId);
+    //     return ResponseEntity.ok(products);
+    // }
 
     @GetMapping("/supplier/{supplierId}/active")
     public ResponseEntity<List<Product>> getActiveProductsBySupplier(@PathVariable Long supplierId) {
@@ -141,71 +140,66 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @PostMapping("/{productId}/suppliers")
-    public ResponseEntity<SupplierProduct> addSupplierToProduct(@PathVariable Long productId, @Valid @RequestBody AddSupplierRequest request) {
-        SupplierProduct supplierProduct = productService.addSupplierToProduct(
-                productId,
-                request.supplierId(),
-                request.supplierSku(),
-                request.supplierPrice(),
-                request.priority()
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body(supplierProduct);
-    }
+    // @PostMapping("/{productId}/suppliers")
+    // public ResponseEntity<SupplierProduct> addSupplierToProduct(@PathVariable Long productId, @Valid @RequestBody AddSupplierRequest request) {
+    //     SupplierProduct supplierProduct = productService.addSupplierToProduct(
+    //             productId,
+    //             request.supplierId(),
+    //             request.supplierSku(),
+    //             request.supplierPrice(),
+    //             request.priority()
+    //     );
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(supplierProduct);
+    // }
 
-    @GetMapping("/{productId}/suppliers")
-    public ResponseEntity<List<SupplierProduct>> getProductSuppliers(@PathVariable Long productId) {
-        List<SupplierProduct> suppliers = productService.getProductSuppliers(productId);
-        return ResponseEntity.ok(suppliers);
-    }
+    // @GetMapping("/{productId}/suppliers")
+    // public ResponseEntity<List<SupplierProduct>> getProductSuppliers(@PathVariable Long productId) {
+    //     List<SupplierProduct> suppliers = productService.getProductSuppliers(productId);
+    //     return ResponseEntity.ok(suppliers);
+    // }
 
-    @GetMapping("/{productId}/primary-supplier")
-    public ResponseEntity<SupplierProduct> getPrimarySupplier(@PathVariable Long productId) {
-        return productService.getPrimarySupplierForProduct(productId)
-                .map(supplier -> ResponseEntity.ok(supplier))
-                .orElse(ResponseEntity.notFound().build());
-    }
+    // @GetMapping("/{productId}/primary-supplier")
+    // public ResponseEntity<SupplierProduct> getPrimarySupplier(@PathVariable Long productId) {
+    //     return productService.getPrimarySupplierForProduct(productId)
+    //             .map(supplier -> ResponseEntity.ok(supplier))
+    //             .orElse(ResponseEntity.notFound().build());
+    // }
 
-    @DeleteMapping("/{productId}/suppliers/{supplierId}")
-    public ResponseEntity<Void> removeSupplierFromProduct(@PathVariable Long productId, @PathVariable Long supplierId) {
-        productService.removeSupplierFromProduct(productId, supplierId);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{productId}/suppliers/{supplierId}")
+    // public ResponseEntity<Void> removeSupplierFromProduct(@PathVariable Long productId, @PathVariable Long supplierId) {
+    //     productService.removeSupplierFromProduct(productId, supplierId);
+    //     return ResponseEntity.noContent().build();
+    // }
 
-    @PutMapping("/supplier-products/{supplierProductId}")
-    public ResponseEntity<SupplierProduct> updateSupplierProduct(@PathVariable Long supplierProductId, @Valid @RequestBody UpdateSupplierProductRequest request) {
-        productService.updateSupplierProduct(supplierProductId, request.supplierPrice(), request.priority(), request.active());
-        SupplierProduct updated = productService.getProductSuppliers(supplierProductId).stream()
-                .filter(sp -> sp.getId().equals(supplierProductId))
-                .findFirst()
-                .orElseThrow();
-        return ResponseEntity.ok(updated);
-    }
+    // @PutMapping("/supplier-products/{supplierProductId}")
+    // public ResponseEntity<SupplierProduct> updateSupplierProduct(@PathVariable Long supplierProductId, @Valid @RequestBody UpdateSupplierProductRequest request) {
+    //     return ResponseEntity.ok(updated);
+    // }// }
 
     // DTOs for request bodies
-    public record CreateProductWithSupplierRequest(
-            @NotBlank String sku,
-            @NotBlank String name,
-            String description,
-            @NotNull @Positive BigDecimal price,
-            @NotBlank String category,
-            @NotNull Long supplierId,
-            @NotBlank String supplierSku,
-            @NotNull @Positive BigDecimal supplierPrice
-    ) {}
+    // public record CreateProductWithSupplierRequest(
+    //         @NotBlank String sku,
+    //         @NotBlank String name,
+    //         String description,
+    //         @NotNull @Positive BigDecimal price,
+    //         @NotBlank String category,
+    //         @NotNull Long supplierId,
+    //         @NotBlank String supplierSku,
+    //         @NotNull @Positive BigDecimal supplierPrice
+    // ) {}
 
-    public record AddSupplierRequest(
-            @NotNull Long supplierId,
-            @NotBlank String supplierSku,
-            @NotNull @Positive BigDecimal supplierPrice,
-            int priority
-    ) {}
+    // public record AddSupplierRequest(
+    //         @NotNull Long supplierId,
+    //         @NotBlank String supplierSku,
+    //         @NotNull @Positive BigDecimal supplierPrice,
+    //         int priority
+    // ) {}
 
-    public record UpdateSupplierProductRequest(
-            BigDecimal supplierPrice,
-            int priority,
-            boolean active
-    ) {}
+    // public record UpdateSupplierProductRequest(
+    //         BigDecimal supplierPrice,
+    //         int priority,
+    //         boolean active
+    // ) {}
     public record CreateProductRequest(
             @NotBlank String sku,
             @NotBlank String name,

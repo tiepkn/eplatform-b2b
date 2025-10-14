@@ -106,7 +106,7 @@ Troubleshooting:
 1. **discovery-server** (port 8761)
 2. **config-server** (port 8888)
 3. **api-gateway** (port 8080)
-4. **Other services** (inventory:8110, catalog:8090, order:8120, payment:8130, auth:8100)
+4. **Other services** (inventory:8110, catalog:8100, order:8120, payment:8130, auth:8090)
 
 ## 🧪 Testing
 
