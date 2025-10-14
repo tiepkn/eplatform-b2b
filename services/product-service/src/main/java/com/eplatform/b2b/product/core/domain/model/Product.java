@@ -1,4 +1,4 @@
-package com.eplatform.b2b.product.domain;
+package com.eplatform.b2b.product.core.domain.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -33,6 +33,7 @@ public class Product {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    @Getter
     @Setter
     @Column(nullable = false)
     private String category;
