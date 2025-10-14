@@ -102,13 +102,13 @@ if [ -n "$1" ]; then
             start_service "services/order-service" "8120" "orders"
             ;;
         "catalog")
-            start_service "services/catalog-service" "8090"
+            start_service "services/catalog-service" "8100"
             ;;
         "payment")
             start_service "services/payment-service" "8130"
             ;;
         "auth")
-            start_service "services/auth-service" "8100"
+            start_service "services/auth-service" "8090"
             ;;
         "product")
             start_service "services/product-service" "8140"
@@ -125,12 +125,11 @@ if [ -n "$1" ]; then
             exit 1
             ;;
     esac
-else
     # Start all services
     start_service "services/inventory-service" "8110" "inventory" || exit 1
     sleep 2
 
-    start_service "services/catalog-service" "8090" || exit 1
+    start_service "services/catalog-service" "8100" || exit 1
     sleep 2
 
     start_service "services/order-service" "8120" "orders" || exit 1
@@ -139,7 +138,7 @@ else
     start_service "services/payment-service" "8130" || exit 1
     sleep 2
 
-    start_service "services/auth-service" "8100" || exit 1
+    start_service "services/auth-service" "8090" || exit 1
     sleep 2
 
     start_service "services/product-service" "8140" || exit 1
@@ -157,9 +156,9 @@ echo -e "   • Eureka Dashboard: http://localhost:8761"
 echo -e "   • API Gateway: http://localhost:8080/actuator/health"
 echo -e "   • Inventory Service: http://localhost:8110/actuator/health"
 echo -e "   • Order Service: http://localhost:8120/actuator/health"
-echo -e "   • Catalog Service: http://localhost:8090/actuator/health"
+echo -e "   • Catalog Service: http://localhost:8100/actuator/health"
 echo -e "   • Payment Service: http://localhost:8130/actuator/health"
-echo -e "   • Auth Service: http://localhost:8100/actuator/health"
+echo -e "   • Auth Service: http://localhost:8090/actuator/health"
 echo -e "   • Product Service: http://localhost:8140/actuator/health"
 echo -e "   • Supplier Service: http://localhost:8150/actuator/health"
 

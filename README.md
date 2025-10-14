@@ -52,9 +52,41 @@ This monorepo contains a B2B e-commerce microservices system built with Java 21,
 - Kafka (optional for messaging)
 
 ## Build
+
+Prerequisites:
+- JDK 21 on PATH (java -version should show 21)
+- Maven 3.9+ installed or use the Maven Wrapper if present
+
+Full monorepo build (recommended):
 ```bash
-mvn clean install -DskipTests
+mvn -q clean install -DskipTests
 ```
+
+Build and run tests:
+```bash
+mvn clean verify
+```
+
+Build a single service and its dependencies:
+```bash
+# Example: build inventory-service and all it depends on
+mvn clean install -pl services/inventory-service -am -DskipTests
+```
+
+Using Maven Wrapper (if mvnw exists):
+```bash
+./mvnw -q clean install -DskipTests
+```
+
+Common options:
+- -DskipTests to skip unit tests
+- -DskipITs to skip integration tests (if configured)
+- -T 1C to build with 1 thread per CPU core
+
+Troubleshooting:
+- Ensure JAVA_HOME points to JDK 21
+- If you see protobuf/grpc codegen issues, run: `mvn clean install -U`
+- If a module fails, try cleaning only that module: `mvn -pl :artifactId clean install`
 
 ## Run Services
 
@@ -74,7 +106,7 @@ mvn clean install -DskipTests
 1. **discovery-server** (port 8761)
 2. **config-server** (port 8888)
 3. **api-gateway** (port 8080)
-4. **Other services** (inventory:8110, catalog:8090, order:8120, payment:8130, auth:8100)
+4. **Other services** (inventory:8110, catalog:8100, order:8120, payment:8130, auth:8090)
 
 ## 🧪 Testing
 

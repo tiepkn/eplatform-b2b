@@ -25,7 +25,7 @@ public class Reservation {
     private ReservationStatus status;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
+    @Column(columnDefinition = "json")
     private List<ReservationItem> items;
 
     @CreationTimestamp
