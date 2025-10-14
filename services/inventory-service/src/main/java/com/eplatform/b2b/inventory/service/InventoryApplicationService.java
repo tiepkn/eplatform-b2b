@@ -4,9 +4,15 @@ import com.eplatform.b2b.common.dto.ReserveItemDto;
 import com.eplatform.b2b.common.dto.ReserveRequestDto;
 import com.eplatform.b2b.common.dto.ReserveResponseDto;
 import com.eplatform.b2b.inventory.domain.ProductStock;
+import com.eplatform.b2b.inventory.domain.Reservation;
+import com.eplatform.b2b.inventory.domain.ReservationItem;
+import com.eplatform.b2b.inventory.domain.ReservationStatus;
+import com.eplatform.b2b.inventory.exception.InsufficientStockException;
 import com.eplatform.b2b.inventory.repo.ProductStockRepository;
+import com.eplatform.b2b.inventory.repo.ReservationRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,9 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class InventoryApplicationService {
 
   private final ProductStockRepository repo;
+  private final ReservationRepository reservationRepository;
 
-  public InventoryApplicationService(ProductStockRepository repo) {
+  public InventoryApplicationService(ProductStockRepository repo, ReservationRepository reservationRepository) {
     this.repo = repo;
+    this.reservationRepository = reservationRepository;
   }
 
   @Transactional
@@ -32,8 +40,20 @@ public class InventoryApplicationService {
       }
     }
     if (!failed.isEmpty()) {
-      throw new IllegalStateException("Insufficient stock for: " + String.join(",", failed));
+      throw new InsufficientStockException("Insufficient stock for: " + String.join(",", failed));
     }
+
+    // Create a reservation entry with CONFIRMED status for the reserved items
+    Reservation reservation = new Reservation();
+    // For integration tests that don't pass an orderId, we can synthesize one
+    reservation.setOrderId("RES-" + System.currentTimeMillis());
+    reservation.setStatus(ReservationStatus.CONFIRMED);
+    List<ReservationItem> items = request.items().stream()
+        .map(i -> new ReservationItem(i.sku(), i.quantity()))
+        .collect(Collectors.toList());
+    reservation.setItems(items);
+    reservationRepository.save(reservation);
+
     return new ReserveResponseDto(true, List.of());
   }
 }
